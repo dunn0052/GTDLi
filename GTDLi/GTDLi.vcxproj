@@ -193,7 +193,7 @@
     <ClInclude Include="include\public\Retcodes.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\private\MemPool.cpp" />
+    <ClCompile Include="src\memory\MemPool.cpp" />
     <ClCompile Include="src\memory\IAssetLoader.cpp" />
     <ClCompile Include="src\memory\WAssetLoader.cpp" />
     <ClCompile Include="src\audio\Waudio.cpp" />

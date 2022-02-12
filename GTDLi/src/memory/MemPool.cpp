@@ -1,5 +1,5 @@
 #include "PCH/PCH.h"
-#include "MemPool.h"
+#include "private/MemPool.h"
 
 namespace GTDLi
 {

@@ -125,7 +125,7 @@
     <ClCompile Include="src\experimental\GenericSingleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\private\MemPool.cpp">
+    <ClCompile Include="src\memory\MemPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
