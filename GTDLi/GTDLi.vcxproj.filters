@@ -69,9 +69,27 @@
     <ClInclude Include="include\private\GUIDGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\public\IAssetLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\private\WAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\private\WAssetLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\experimental\GenericSingleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\private\WAV.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\private\MemPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\asset\CSVLoader.cpp">
+    <ClCompile Include="src\memory\CSVLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\PCH\PCH.cpp">
@@ -93,6 +111,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\audio\IAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\memory\IAssetLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audio\Waudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\memory\WAssetLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\experimental\GenericSingleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\private\MemPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #define DIRECTINPUT_VERSION 0x0800
 
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <utility>
 #include <algorithm>

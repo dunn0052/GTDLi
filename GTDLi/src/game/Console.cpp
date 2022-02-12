@@ -1,5 +1,9 @@
+#pragma comment(lib, "winmm.lib")
+
 #include "PCH/PCH.h"
 #include "public/Console.h"
+#include "private/WAssetLoader.h"
+#include "private/MemPool.h"
 
 namespace GTDLi
 {
@@ -38,12 +42,23 @@ namespace GTDLi
 
 		// Controllers start at 1 ??
 		//std::iota(std::begin(nums), std::end(nums), 1);
-		std::vector<byte> nums = { 0 };
-		RETURN_RETCODE_IF_NOT_OK(LoadControllers(nums));
+		//std::vector<byte> nums = { 0 };
+		//RETURN_RETCODE_IF_NOT_OK(LoadControllers(nums));
+		SoundProps props = { "D:\\GTDLi\\bin\\Debug\\x64\\Sandbox\\assets\\LTTP_Rupee1.wav" };
 
-		SoundProps props = { "" };
 		RETURN_RETCODE_IF_NOT_OK(IAudio::Instance().LoadSound(props));
 
+		RETURN_RETCODE_IF_NOT_OK(IAudio::Instance().Play(props.guid));
+
+		//RETURN_RETCODE_IF_NOT_OK(IAssetLoader::Instance().RemoveAsset(props.guid));
+
+		AssetProps asset_prop = { "D:\\GTDLi\\bin\\Debug\\x64\\Sandbox\\assets\\SalarUpdate.pdf" };
+
+		RETURN_RETCODE_IF_NOT_OK(IAssetLoader::Instance().LoadAsset(asset_prop));
+
+		RETCODE ret = RTN_OK;
+
+		char* test = (char*)MemPool::Instance().Alloc(90000 * sizeof(char), ret);
 		m_Running = true;
 
 		while (m_Running)
@@ -51,6 +66,8 @@ namespace GTDLi
 			m_DT.UpdateDT();
 
 			RETURN_RETCODE_IF_NOT_OK(Update(m_DT));
+
+			Sleep(10);
 		}
 		return RTN_OK;
 	}

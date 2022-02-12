@@ -14,6 +14,7 @@ namespace GTDLi
 
 		GUID64() : high(0), low(0) {}
 		GUID64(uint64_t high_value, uint64_t low_value) : high(high_value), low(low_value) { }
+		GUID64(const GUID64& other) : high(other.high), low(other.low) { }
 
 		bool operator == (const GUID64& other) const
 		{
