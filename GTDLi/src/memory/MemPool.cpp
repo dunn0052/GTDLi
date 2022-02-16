@@ -112,6 +112,8 @@ namespace GTDLi
 
             cursor_chunk = cursor_chunk->m_Next_Chunk;
         }
+
+        return retcode;
     }
 
     RETCODE MemPool::AllocatePoolMemory(const size_t& requested_size)

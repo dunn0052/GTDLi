@@ -2,6 +2,11 @@
 #include "public/Retcodes.h"
 #include "public/Core.h"
 
+#ifdef GTD_PLATFORM_WINDOWS
+#else
+#define UNIX_RAND_PATH "/dev/random"
+#endif
+
 namespace GTDLi
 {
 	struct GUID64

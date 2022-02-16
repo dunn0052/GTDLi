@@ -1,8 +1,11 @@
 #include "PCH/PCH.h"
 #include "private/GUIDGenerator.h"
+#include "private/MemPool.h"
 #include <cstdint>
 #include <random>
 #include <time.h>
+
+#pragma comment (lib, "bcrypt.lib")
 
 namespace GTDLi
 {
@@ -40,14 +43,46 @@ namespace GTDLi
 
 	RETCODE GTDLi::GUIDGenerator::genrate_random_bytes(uint8_t buffer[], uint32_t buffer_size)
 	{
+		RETCODE retcode = RTN_OK;
 		uint32_t byte_index = 0;
-		srand((int)time(0));
-		for (; byte_index < buffer_size; byte_index++)
+		
+#ifdef GTD_PLATFORM_WINDOWS
+		NTSTATUS status;
+		ULONG cbBuffer = 0;
+		BCRYPT_ALG_HANDLE pCrypAlgHandle = nullptr;
+		LPCWSTR algname = BCRYPT_RNG_ALGORITHM;
+
+		status = BCryptOpenAlgorithmProvider(&pCrypAlgHandle, algname, nullptr, 0);
+
+		if (status <= 0)
 		{
-			buffer[byte_index] = (uint8_t)rand();
+			status = BCryptGenRandom(pCrypAlgHandle, buffer, buffer_size, 0);
+			if (status > 0)
+			{
+				retcode = RTN_FAIL;
+			}
 		}
 
-		return RTN_OK;
+#else
+		int rand_file = open(UNIX_RAND_PATH, O_RDONLY);
+		
+		if (0 < rand_file)
+		{
+			read(rand_file, buffer, buffer_size);
+		}
+#endif
+		else
+		{
+			LOG_WARN("OS RNG could not be initialized! Using srand() like an idiot");
+			srand((int)time(0));
+			for (; byte_index < buffer_size; byte_index++)
+			{
+				buffer[byte_index] = (uint8_t)rand();
+			}
+
+		}
+
+		return retcode;
 	}
 
 	RETCODE GTDLi::GUIDGenerator::randomize_buffer(uint32_t buffer[], size_t buffer_size)

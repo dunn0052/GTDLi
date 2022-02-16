@@ -131,7 +131,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>User32.lib;gdi32.lib;shell32.lib;Xinput.lib;Winmm.lib;</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;gdi32.lib;shell32.lib;Xinput.lib;Winmm.lib;bcrypt.lib;</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(OutDir)GTDLi.dll" "$(SolutionDir)bin\$(Configuration)\$(Platform)\Sandbox\"</Command>
