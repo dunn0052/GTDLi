@@ -34,6 +34,16 @@ project "GTDLi"
         "%{prj.name}/include"
     }
 
+    links
+    {
+        "User32.lib",
+        "gdi32.lib",
+        "shell32.lib",
+        "Xinput.lib",
+        "Winmm.lib",
+        "bcrypt.lib"
+    }
+
     filter "system:windows"
         cppdialect "C++17"
         staticruntime "On"
