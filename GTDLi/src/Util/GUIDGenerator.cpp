@@ -47,18 +47,17 @@ namespace GTDLi
 		uint32_t byte_index = 0;
 		
 #ifdef GTD_PLATFORM_WINDOWS
-		NTSTATUS status;
-		ULONG cbBuffer = 0;
+		NTSTATUS status = 0;
 		BCRYPT_ALG_HANDLE pCrypAlgHandle = nullptr;
-		LPCWSTR algname = BCRYPT_RNG_ALGORITHM;
 
-		status = BCryptOpenAlgorithmProvider(&pCrypAlgHandle, algname, nullptr, 0);
+		status = BCryptOpenAlgorithmProvider(&pCrypAlgHandle, BCRYPT_RNG_ALGORITHM, nullptr, 0);
 
-		if (status <= 0)
+		if (BCRYPT_SUCCESS(status))
 		{
 			status = BCryptGenRandom(pCrypAlgHandle, buffer, buffer_size, 0);
-			if (status > 0)
+			if (!BCRYPT_SUCCESS(status))
 			{
+				LOG_FATAL("BCrtypt RNG failure!");
 				retcode = RTN_FAIL;
 			}
 		}
