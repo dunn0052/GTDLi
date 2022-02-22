@@ -5,10 +5,13 @@
 #include "private/Timestep.h"
 #include "Button.h"
 #include "Axis.h"
+#include "Hook.h"
 
 
 namespace GTDLi
 {
+    using ButtonPressFunction = RETCODE(*)(const Button&);
+
     struct GTD_API IControllerProps
     {
         unsigned int ID;
@@ -27,5 +30,8 @@ namespace GTDLi
         GTD_API virtual RETCODE GetButtonStatus(Button& button) = 0;
 
         GTD_API virtual RETCODE GetAxisStatus(Axis& axis) = 0;
+
+        GTD_API virtual Hook<ButtonPressFunction>& ButtonPressEvent() = 0;
+
 	};
 }

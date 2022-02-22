@@ -14,7 +14,8 @@ namespace GTDLi
 		{ 
 			sizeof(m_ControllerState), 
 			JOY_RETURNBUTTONS | JOY_RETURNCENTERED | JOY_RETURNX | JOY_RETURNY 
-		}
+		},
+		OnButtonPress()
 
 	{
 
@@ -67,10 +68,8 @@ namespace GTDLi
 	{
 		RETURN_RETCODE_IF_NOT_OK(GetState());
 
-#if 0
-		RETURN_RETCODE_IF_NOT_OK(PrintButtons());
-		RETURN_RETCODE_IF_NOT_OK(PrintAxis());
-#endif
+		RETURN_RETCODE_IF_NOT_OK(PollButtons());
+
 		return RTN_OK;
 	}
 
@@ -149,7 +148,7 @@ namespace GTDLi
 		return RTN_OK;
 	}
 
-	RETCODE WController::PrintButtons()
+	RETCODE WController::PollButtons()
 	{
 		if (!m_Connected)
 		{
@@ -161,7 +160,9 @@ namespace GTDLi
 			if(m_CurrentButtons & +button.m_Code || m_PreviousButtons & +button.m_Code)
 			{
 				RETURN_RETCODE_IF_NOT_OK(GetButtonStatus(button));
-				LOG_DEBUG("Pressed button %s is in state %d", button.m_Name.c_str(), button.m_Status);
+				//LOG_DEBUG("Pressed button %s is in state %d", button.m_Name.c_str(), button.m_Status);
+				OnButtonPress.Invoke(button);
+
 			}
 		}
 
@@ -190,4 +191,10 @@ namespace GTDLi
 
 		return RTN_OK;
 	}
+
+	GTD_API Hook<ButtonPressFunction>& WController::ButtonPressEvent()
+	{
+		return OnButtonPress;
+	}
+
 }

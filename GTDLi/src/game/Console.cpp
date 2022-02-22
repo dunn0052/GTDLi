@@ -1,4 +1,6 @@
-#pragma comment(lib, "winmm.lib")
+#ifdef GTD_PLATFORM_WINDOWS
+	#pragma comment(lib, "winmm.lib")
+#endif
 
 #include "PCH.h"
 #include "public/Console.h"
@@ -36,14 +38,23 @@ namespace GTDLi
 		return RTN_OK;
 	}
 
+	static RETCODE PressButton(const Button& button)
+	{
+		LOG_DEBUG("Pressed button %s", button.m_Name.c_str());
+		return RTN_OK;
+	}
+
 	RETCODE Console::Run()
 	{
 		//std::vector<byte> nums(joyGetNumDevs());
 
 		// Controllers start at 1 ??
 		//std::iota(std::begin(nums), std::end(nums), 1);
-		//std::vector<byte> nums = { 0 };
-		//RETURN_RETCODE_IF_NOT_OK(LoadControllers(nums));
+		std::vector<byte> nums = { 1 };
+		RETURN_RETCODE_IF_NOT_OK(LoadControllers(nums));
+
+		m_Controllers[0]->ButtonPressEvent() += &PressButton;
+#if 0
 		SoundProps props = { "D:\\GTDLi\\bin\\Debug\\x64\\Sandbox\\assets\\LTTP_Rupee1.wav" };
 
 		RETURN_RETCODE_IF_NOT_OK(IAudio::Instance().LoadSound(props));
@@ -59,6 +70,7 @@ namespace GTDLi
 		RETCODE ret = RTN_OK;
 
 		char* test = (char*)MemPool::Instance().Alloc(90000 * sizeof(char), ret);
+#endif
 		m_Running = true;
 
 		while (m_Running)
@@ -107,16 +119,6 @@ namespace GTDLi
 
 	RETCODE Console::UpdateGame(Timestep& dt)
 	{
-		ButtonProp prop = { ButtonCode::A, "A" };
-		Button btn = Button(prop);
-
-		for (Ref<IController> controller : m_Controllers)
-		{
-			RETURN_RETCODE_IF_NOT_OK(controller->GetButtonStatus(btn));
-			if (BUTTON_PRESSED & btn.m_Status)
-			{
-			}
-		}
 		return RTN_OK;
 	}
 }
