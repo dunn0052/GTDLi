@@ -11,6 +11,7 @@
 namespace GTDLi
 {
     using ButtonPressFunction = RETCODE(*)(const Button&);
+    using AxisPressFunction = RETCODE(*)(const Axis&);
 
     struct GTD_API IControllerProps
     {
@@ -32,6 +33,8 @@ namespace GTDLi
         GTD_API virtual RETCODE GetAxisStatus(Axis& axis) = 0;
 
         GTD_API virtual Hook<ButtonPressFunction>& ButtonPressEvent() = 0;
+
+        GTD_API virtual Hook<AxisPressFunction>& AxisPressEvent() = 0;
 
 	};
 }

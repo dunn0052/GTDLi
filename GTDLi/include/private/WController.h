@@ -30,9 +30,11 @@ namespace GTDLi
 
         GTD_API RETCODE PollButtons();
 
-        GTD_API RETCODE PrintAxis();
+        GTD_API RETCODE PollAxis();
 
         GTD_API Hook<ButtonPressFunction>& ButtonPressEvent();
+
+        GTD_API Hook<AxisPressFunction>& AxisPressEvent();
 
     private:
         RETCODE GetState();
@@ -48,6 +50,7 @@ namespace GTDLi
         DWORD m_PreviousAxis[NUM_AXIS];
 
         Hook<ButtonPressFunction> OnButtonPress;
+        Hook<AxisPressFunction> OnAxisPress;
     };
     
 }

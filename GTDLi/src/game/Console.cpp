@@ -1,3 +1,4 @@
+
 #ifdef GTD_PLATFORM_WINDOWS
 	#pragma comment(lib, "winmm.lib")
 #endif
@@ -40,20 +41,27 @@ namespace GTDLi
 
 	static RETCODE PressButton(const Button& button)
 	{
-		LOG_DEBUG("Pressed button %s", button.m_Name.c_str());
+		LOG_DEBUG("Pressed button %s is in state %d", button.m_Name.c_str(), button.m_Status);
+		return RTN_OK;
+	}
+
+	static RETCODE PressAxis(const Axis& axis)
+	{
+		LOG_DEBUG("Axis %s is at %d with status %d", axis.m_Name.c_str(), axis.m_Position, axis.m_Status);
 		return RTN_OK;
 	}
 
 	RETCODE Console::Run()
 	{
-		//std::vector<byte> nums(joyGetNumDevs());
+		std::vector<byte> nums(joyGetNumDevs());
 
 		// Controllers start at 1 ??
 		//std::iota(std::begin(nums), std::end(nums), 1);
-		std::vector<byte> nums = { 1 };
+		//std::vector<byte> nums = { 0 };
 		RETURN_RETCODE_IF_NOT_OK(LoadControllers(nums));
 
 		m_Controllers[0]->ButtonPressEvent() += &PressButton;
+		m_Controllers[0]->AxisPressEvent() += &PressAxis;
 #if 0
 		SoundProps props = { "D:\\GTDLi\\bin\\Debug\\x64\\Sandbox\\assets\\LTTP_Rupee1.wav" };
 

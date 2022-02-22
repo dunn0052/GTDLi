@@ -8,14 +8,16 @@ namespace GTDLi
 {
 
 	WController::WController(IControllerProps& props) : 
-		m_ID(props.ID), m_Connected(false), m_PreviousButtons(0), m_CurrentButtons(0), m_PreviousAxis{ 0 }, m_CurrentAxis{ 0 }, m_JoysticCapabilities{ 0 },
+		m_ID(props.ID), m_Connected(false), m_PreviousButtons(0), m_CurrentButtons(0), m_PreviousAxis{ 0 }, m_CurrentAxis{ 0 }, m_JoysticCapabilities{ 0 }, 
+		
+		OnButtonPress(),
+		OnAxisPress(),
 	
 		m_ControllerState
 		{ 
 			sizeof(m_ControllerState), 
 			JOY_RETURNBUTTONS | JOY_RETURNCENTERED | JOY_RETURNX | JOY_RETURNY 
-		},
-		OnButtonPress()
+		}
 
 	{
 
@@ -69,6 +71,8 @@ namespace GTDLi
 		RETURN_RETCODE_IF_NOT_OK(GetState());
 
 		RETURN_RETCODE_IF_NOT_OK(PollButtons());
+
+		RETURN_RETCODE_IF_NOT_OK(PollAxis());
 
 		return RTN_OK;
 	}
@@ -168,7 +172,7 @@ namespace GTDLi
 
 		return RTN_OK;
 	}
-	GTD_API RETCODE WController::PrintAxis()
+	GTD_API RETCODE WController::PollAxis()
 	{
 		byte axisIndex = 0;
 		Axis* axis = allAxis;
@@ -184,7 +188,8 @@ namespace GTDLi
 			if (NEUTRAL_POSITION != m_CurrentAxis[axisIndex] || NEUTRAL_POSITION != m_PreviousAxis[axisIndex])
 			{
 				RETURN_RETCODE_IF_NOT_OK(GetAxisStatus(*axis));
-				LOG_DEBUG("Axis %s is at %d with status %d", (*axis).m_Name.c_str(), (*axis).m_Position, (*axis).m_Status);
+				//LOG_DEBUG("Axis %s is at %d with status %d", (*axis).m_Name.c_str(), (*axis).m_Position, (*axis).m_Status);
+				OnAxisPress.Invoke(*axis);
 			}
 			axis++;
 		}
@@ -195,6 +200,11 @@ namespace GTDLi
 	GTD_API Hook<ButtonPressFunction>& WController::ButtonPressEvent()
 	{
 		return OnButtonPress;
+	}
+
+	GTD_API Hook<AxisPressFunction>& WController::AxisPressEvent()
+	{
+		return OnAxisPress;
 	}
 
 }
