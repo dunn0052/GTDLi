@@ -1,5 +1,5 @@
 #pragma once
-#include "PCH/PCH.h"
+#include "PCH.h"
 #include "public/Core.h"
 
 namespace GTDLi

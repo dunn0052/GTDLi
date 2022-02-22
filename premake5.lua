@@ -31,7 +31,8 @@ project "GTDLi"
     includedirs
     {
         "%{prj.name}/vendor",
-        "%{prj.name}/include"
+        "%{prj.name}/include",
+        "%{prj.name}/include/PCH"
     }
 
     links
@@ -57,7 +58,7 @@ project "GTDLi"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            ("xcopy ../bin/" .. outputdir .. "/GTDLi/GTDLi.dll ../bin/" .. outputdir .. "/Sandbox/.")
         }
 
     filter "configurations:Debug"
