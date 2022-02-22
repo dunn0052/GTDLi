@@ -1,12 +1,15 @@
 workspace "GTDLi"
     architecture "x64"
-
+    
     configurations
     {
         "Debug",
         "Release",
         "Dist"
     }
+    
+    startproject "Sandbox"
+
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -58,7 +61,7 @@ project "GTDLi"
 
         postbuildcommands
         {
-            ("xcopy ../bin/" .. outputdir .. "/GTDLi/GTDLi.dll ../bin/" .. outputdir .. "/Sandbox/.")
+            ("xcopy /y ..\\bin\\" .. outputdir .. "\\GTDLi\\GTDLi.dll ..\\bin\\" .. outputdir .. "\\Sandbox\\")
         }
 
     filter "configurations:Debug"
