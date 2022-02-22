@@ -66,7 +66,8 @@ project "GTDLi"
 
     filter "configurations:Debug"
         defines "GTD_DEBUG"
-        symbols "On"    
+        symbols "On"
+        optimize "Off" 
         
     filter "configurations:Release"
         defines "GTD_RELEASE"
@@ -117,7 +118,8 @@ project "GTDLi"
 
     filter "configurations:Debug"
         defines "GTD_DEBUG"
-        symbols "On"    
+        symbols "On"
+        optimize "Off"  
         
     filter "configurations:Release"
         defines "GTD_RELEASE"
