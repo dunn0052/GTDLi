@@ -86,24 +86,21 @@ namespace GTDLi
 
 		for (auto& keyMap : m_KeyToButtonMap)
 		{
-			/*
-			Set button status
-			OFF = 0x0, // ~current & ~previous
-			RELEASED = 0x1, // ~current & previous
-			PRESSED = 0x2, // current & ~previous
-			HELD = 0x3 // current & previous
-			*/
+			// copy current bit to previous bit
+			keyMap.second.m_Status = keyMap.second.m_Status >> 1ull;
 
 			if (KEY_PRESSED_CODE & GetAsyncKeyState(keyMap.first))
 			{
-				m_CurrentButtons |= +keyMap.second.m_Code;
+				SET_BIT(keyMap.second.m_Status, 1);
+			}
 
+			if (keyMap.second.m_Status)
+			{
 				buttons_pressed.push_back(keyMap.second);
-				
+
 				retcode |= m_OnButtonPressed[keyMap.second].Invoke(keyMap.second);
 			}
 
-			keyMap.second.m_Status |= static_cast<byte>((m_CurrentButtons & +keyMap.second.m_Code) > 0) << 0x1 | static_cast<byte>((m_PreviousButtons & +keyMap.second.m_Code) > 0);
 		}
 
 		if (!buttons_pressed.empty())
