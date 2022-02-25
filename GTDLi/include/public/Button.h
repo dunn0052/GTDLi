@@ -16,6 +16,13 @@ namespace GTDLi
 
 	struct Button
 	{
+
+		GTD_API Button(const ButtonCode& code, const std::string& name)
+			: m_Code(code), m_Name(name), m_Status(BUTTON_OFF)
+		{
+
+		}
+
 		GTD_API Button(const ButtonProp& prop)
 			: m_Code(prop.code), m_Name(prop.name), m_Status(BUTTON_OFF)
 		{
@@ -28,10 +35,22 @@ namespace GTDLi
 
 		}
 
+
+
 	public:
 		byte m_Status;
 		const ButtonCode m_Code;
 		const std::string m_Name;
+	};
+
+	struct ButtonHashFunction
+	{
+		std::size_t operator() (const Button& button) const
+		{
+			std::size_t h1 = std::hash<ButtonCode>()(button.m_Code);
+
+			return h1;
+		}
 	};
 
 	// For debugging

@@ -12,7 +12,7 @@ namespace GTDLi
 		
 		OnButtonPress(),
 		OnAxisPress(),
-	
+		//m_ButtonHooks{},
 		m_ControllerState
 		{ 
 			sizeof(m_ControllerState), 
@@ -200,6 +200,11 @@ namespace GTDLi
 	GTD_API Hook<ButtonPressFunction>& WController::ButtonPressEvent()
 	{
 		return OnButtonPress;
+	}
+
+	GTD_API Hook<ButtonPressFunction>& WController::ButtonPressEvent(const Button& button)
+	{
+		return m_ButtonHooks[button];
 	}
 
 	GTD_API Hook<AxisPressFunction>& WController::AxisPressEvent()

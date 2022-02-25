@@ -34,6 +34,8 @@ namespace GTDLi
 
         GTD_API Hook<ButtonPressFunction>& ButtonPressEvent();
 
+        GTD_API Hook<ButtonPressFunction>& ButtonPressEvent(const Button& button);
+
         GTD_API Hook<AxisPressFunction>& AxisPressEvent();
 
     private:
@@ -51,6 +53,8 @@ namespace GTDLi
 
         Hook<ButtonPressFunction> OnButtonPress;
         Hook<AxisPressFunction> OnAxisPress;
+
+        std::unordered_map<const Button&, Hook<ButtonPressFunction>> m_ButtonHooks;
     };
     
 }

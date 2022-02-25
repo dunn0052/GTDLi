@@ -6,13 +6,10 @@
 #include "Button.h"
 #include "Axis.h"
 #include "Hook.h"
-
+#include "InputEventTypes.h"
 
 namespace GTDLi
 {
-    using ButtonPressFunction = RETCODE(*)(const Button&);
-    using AxisPressFunction = RETCODE(*)(const Axis&);
-
     struct GTD_API IControllerProps
     {
         unsigned int ID;
@@ -33,6 +30,8 @@ namespace GTDLi
         GTD_API virtual RETCODE GetAxisStatus(Axis& axis) = 0;
 
         GTD_API virtual Hook<ButtonPressFunction>& ButtonPressEvent() = 0;
+
+        GTD_API virtual Hook<ButtonPressFunction>& ButtonPressEvent(const Button& button) = 0;
 
         GTD_API virtual Hook<AxisPressFunction>& AxisPressEvent() = 0;
 
