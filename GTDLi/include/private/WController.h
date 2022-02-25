@@ -32,7 +32,9 @@ namespace GTDLi
 
         GTD_API RETCODE PollAxis();
 
-        GTD_API Hook<ButtonPressFunction>& ButtonPressEvent();
+        GTD_API Hook<ButtonPressFunction>& ButtonPressEvent(const Button& button);
+
+        GTD_API Hook<MultipleButtonsPressedFunction>& ButtonPressEvent();
 
         GTD_API Hook<AxisPressFunction>& AxisPressEvent();
 
@@ -49,8 +51,9 @@ namespace GTDLi
         DWORD m_CurrentAxis[NUM_AXIS];
         DWORD m_PreviousAxis[NUM_AXIS];
 
-        Hook<ButtonPressFunction> OnButtonPress;
-        Hook<AxisPressFunction> OnAxisPress;
+        Hook<MultipleButtonsPressedFunction> m_OnAnyButtonsPressed;
+        std::unordered_map<Button, Hook<ButtonPressFunction>, ButtonHashFunction> m_OnButtonPressed;
+        Hook<AxisPressFunction> m_OnAxisPressed;
     };
     
 }

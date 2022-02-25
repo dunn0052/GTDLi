@@ -51,8 +51,25 @@ namespace GTDLi
 		return RTN_OK;
 	}
 
+	static RETCODE SingleButtonPress(const Button& button)
+	{
+		LOG_DEBUG("Pressed button %s is in state %d", button.m_Name.c_str(), button.m_Status);
+		return RTN_OK;
+	}
+
+	static RETCODE KeyBoardButtonPress(const std::vector<Button>& buttons)
+	{
+		for (const Button& button : buttons)
+		{
+			LOG_DEBUG("Pressed button %s is in state %d", button.m_Name.c_str(), button.m_Status);
+		}
+
+		return RTN_OK;
+	}
+
 	RETCODE Console::Run()
 	{
+#if 0
 		std::vector<byte> nums(joyGetNumDevs());
 
 		// Controllers start at 1 ??
@@ -62,7 +79,6 @@ namespace GTDLi
 
 		m_Controllers[0]->ButtonPressEvent() += &PressButton;
 		m_Controllers[0]->AxisPressEvent() += &PressAxis;
-#if 0
 		SoundProps props = { "D:\\GTDLi\\bin\\Debug\\x64\\Sandbox\\assets\\LTTP_Rupee1.wav" };
 
 		RETURN_RETCODE_IF_NOT_OK(IAudio::Instance().LoadSound(props));
@@ -78,7 +94,10 @@ namespace GTDLi
 		RETCODE ret = RTN_OK;
 
 		char* test = (char*)MemPool::Instance().Alloc(90000 * sizeof(char), ret);
+		IKeyboard::Instance().ButtonPressEvent(GTDLi::allButtons[1]) += &SingleButtonPress;
 #endif
+		IKeyboard::Instance().ButtonPressEvent() += &KeyBoardButtonPress;
+
 		m_Running = true;
 
 		while (m_Running)
@@ -111,6 +130,8 @@ namespace GTDLi
 		{
 			RETURN_RETCODE_IF_NOT_OK(controller->OnUpdate(dt));
 		}
+
+		IKeyboard::Instance().OnUpdate(dt);
 
 		return RTN_OK;
 	}

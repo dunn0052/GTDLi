@@ -6,6 +6,7 @@
 #include "private/Timestep.h"
 #include "public/IController.h"
 #include "public/IAudio.h"
+#include "public/IKeyboard.h"
 #include <vector>
 
 namespace GTDLi

@@ -10,8 +10,8 @@ namespace GTDLi
 	WController::WController(IControllerProps& props) : 
 		m_ID(props.ID), m_Connected(false), m_PreviousButtons(0), m_CurrentButtons(0), m_PreviousAxis{ 0 }, m_CurrentAxis{ 0 }, m_JoysticCapabilities{ 0 }, 
 		
-		OnButtonPress(),
-		OnAxisPress(),
+		m_OnAnyButtonsPressed(),
+		m_OnAxisPressed(),
 	
 		m_ControllerState
 		{ 
@@ -20,6 +20,20 @@ namespace GTDLi
 		}
 
 	{
+
+		m_OnButtonPressed.insert
+		({
+			{Button{ButtonCode::A, "A"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::B, "B"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::X, "X"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::Y, "Y"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::LB, "LB"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::RB, "RB"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::UP, "UP"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::DOWN, "DOWN"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::LEFT, "LEFT"}, Hook<ButtonPressFunction>()},
+			{Button{ButtonCode::RIGHT, "RIGHT"}, Hook<ButtonPressFunction>()}
+		});
 
 		MMRESULT result = joyGetDevCaps(m_ID, &m_JoysticCapabilities, sizeof(m_JoysticCapabilities));
 
@@ -68,13 +82,15 @@ namespace GTDLi
 
 	RETCODE WController::OnUpdate(Timestep& dt)
 	{
+		RETCODE retcode = RTN_OK;
+
 		RETURN_RETCODE_IF_NOT_OK(GetState());
 
-		RETURN_RETCODE_IF_NOT_OK(PollButtons());
+		retcode |= PollButtons();
 
-		RETURN_RETCODE_IF_NOT_OK(PollAxis());
+		retcode |= PollAxis();
 
-		return RTN_OK;
+		return retcode;
 	}
 
 	RETCODE WController::GetState()
@@ -154,6 +170,9 @@ namespace GTDLi
 
 	RETCODE WController::PollButtons()
 	{
+		RETCODE retcode = RTN_OK;
+		std::vector<Button> buttons_pressed = std::vector<Button>();
+
 		if (!m_Connected)
 		{
 			return RTN_FAIL;
@@ -164,16 +183,23 @@ namespace GTDLi
 			if(m_CurrentButtons & +button.m_Code || m_PreviousButtons & +button.m_Code)
 			{
 				RETURN_RETCODE_IF_NOT_OK(GetButtonStatus(button));
-				//LOG_DEBUG("Pressed button %s is in state %d", button.m_Name.c_str(), button.m_Status);
-				OnButtonPress.Invoke(button);
 
+				retcode |= m_OnButtonPressed[button].Invoke(button);
+
+				buttons_pressed.push_back(button);
 			}
 		}
 
-		return RTN_OK;
+		if (!buttons_pressed.empty())
+		{
+			m_OnAnyButtonsPressed.Invoke(buttons_pressed);
+		}
+
+		return retcode;
 	}
 	GTD_API RETCODE WController::PollAxis()
 	{
+		RETCODE retcode = RTN_OK;
 		byte axisIndex = 0;
 		Axis* axis = allAxis;
 
@@ -189,7 +215,7 @@ namespace GTDLi
 			{
 				RETURN_RETCODE_IF_NOT_OK(GetAxisStatus(*axis));
 				//LOG_DEBUG("Axis %s is at %d with status %d", (*axis).m_Name.c_str(), (*axis).m_Position, (*axis).m_Status);
-				OnAxisPress.Invoke(*axis);
+				retcode |= m_OnAxisPressed.Invoke(*axis);
 			}
 			axis++;
 		}
@@ -197,14 +223,19 @@ namespace GTDLi
 		return RTN_OK;
 	}
 
-	GTD_API Hook<ButtonPressFunction>& WController::ButtonPressEvent()
+	GTD_API Hook<ButtonPressFunction>& WController::ButtonPressEvent(const Button& button)
 	{
-		return OnButtonPress;
+		return m_OnButtonPressed[button];
+	}
+
+	GTD_API Hook<MultipleButtonsPressedFunction>& WController::ButtonPressEvent()
+	{
+		return m_OnAnyButtonsPressed;
 	}
 
 	GTD_API Hook<AxisPressFunction>& WController::AxisPressEvent()
 	{
-		return OnAxisPress;
+		return m_OnAxisPressed;
 	}
 
 }
