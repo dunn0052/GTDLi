@@ -136,20 +136,6 @@ namespace GTDLi
 		return RTN_FAIL;
 	}
 
-	RETCODE WController::GetButtonStatus(Button& button)
-	{
-		/*
-		Set button status
-		OFF = 0x0, // ~current & ~previous
-		RELEASED = 0x1, // ~current & previous
-		PRESSED = 0x2, // current & ~previous
-		HELD = 0x3 // current & previous
-		*/
-
-		button.m_Status |= static_cast<byte>( ( m_CurrentButtons & +button.m_Code ) > 0 ) << 0x1 | static_cast<byte>( ( m_PreviousButtons & +button.m_Code ) > 0 );
-		return RTN_OK;
-	}
-
 	RETCODE WController::GetAxisStatus(Axis& axis)
 	{
 		/*
@@ -178,11 +164,14 @@ namespace GTDLi
 			return RTN_FAIL;
 		}
 
+
+
 		for (Button& button : allButtons)
 		{
+			button.m_Status = button.m_Status >> 1;
 			if(m_CurrentButtons & +button.m_Code || m_PreviousButtons & +button.m_Code)
 			{
-				RETURN_RETCODE_IF_NOT_OK(GetButtonStatus(button));
+				SET_BIT(button.m_Status, 1);
 
 				retcode |= m_OnButtonPressed[button].Invoke(button);
 

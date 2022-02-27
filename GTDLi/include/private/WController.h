@@ -24,8 +24,6 @@ namespace GTDLi
 
         GTD_API virtual RETCODE OnUpdate(Timestep& dt);
 
-        GTD_API virtual RETCODE GetButtonStatus(Button& button);
-
         GTD_API virtual RETCODE GetAxisStatus(Axis& axis);
 
         GTD_API RETCODE PollButtons();

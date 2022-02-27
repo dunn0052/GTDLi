@@ -1,5 +1,7 @@
 #include "PCH.h"
 #include "private/WKeyboard.h"
+#include <execution>
+
 
 namespace GTDLi
 {
@@ -24,7 +26,7 @@ namespace GTDLi
 			{Key::S, Button{ButtonCode::X, "X"}},
 			{Key::X, Button{ButtonCode::Y, "Y"}},
 			{Key::Q, Button{ButtonCode::LB, "LB"}},
-			{Key::R, Button{ButtonCode::RB, "RB"}},
+			{Key::E, Button{ButtonCode::RB, "RB"}},
 			{Key::Up, Button{ButtonCode::UP, "UP"}},
 			{Key::Down, Button{ButtonCode::RIGHT, "DOWN"}},
 			{Key::Left, Button{ButtonCode::LEFT, "LEFT"}},
@@ -55,10 +57,6 @@ namespace GTDLi
 	{
 		return PollKeys();
 	}
-	GTD_API RETCODE WKeyboard::GetButtonStatus(Button& button)
-	{
-		return RTN_OK;
-	}
 
 	GTD_API Hook<MultipleButtonsPressedFunction>& WKeyboard::ButtonPressEvent()
 	{
@@ -87,9 +85,9 @@ namespace GTDLi
 		for (auto& keyMap : m_KeyToButtonMap)
 		{
 			// copy current bit to previous bit
-			keyMap.second.m_Status = keyMap.second.m_Status >> 1ull;
+			keyMap.second.m_Status = keyMap.second.m_Status >> 1;
 
-			if (KEY_PRESSED_CODE & GetAsyncKeyState(keyMap.first))
+			if (KEY_PRESSED_CODE & GetKeyState(keyMap.first))
 			{
 				SET_BIT(keyMap.second.m_Status, 1);
 			}

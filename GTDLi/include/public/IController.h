@@ -26,8 +26,6 @@ namespace GTDLi
 
         GTD_API virtual RETCODE OnUpdate(Timestep& dt) = 0;
 
-        GTD_API virtual RETCODE GetButtonStatus(Button& button) = 0;
-
         GTD_API virtual RETCODE GetAxisStatus(Axis& axis) = 0;
 
         GTD_API virtual Hook<ButtonPressFunction>& ButtonPressEvent(const Button& button) = 0;
